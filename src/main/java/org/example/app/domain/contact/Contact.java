@@ -6,28 +6,31 @@ import jakarta.persistence.*;
 @Table(name = "contacts")
 public class Contact {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
     @Column(name = "name")
-    private String Name;
+    private String name;
 
     @Column(name = "phone")
     private int phone;
 
 
-    public Contact() {
-    }
-
-    public Contact(Long id, String Name,int phone) {}{
+    // Constructor
+    public Contact(Long id, String name, int phone) {
         this.id = id;
-        this.Name = Name;
+        this.name = name;
         this.phone = phone;
     }
 
+    public Contact() {
+
+    }
+
+
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -37,11 +40,11 @@ public class Contact {
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
-    public void setName(String Name) {
-        this.Name = Name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getPhone() {
@@ -52,13 +55,14 @@ public class Contact {
         this.phone = phone;
     }
 
-
     @Override
     public String toString() {
         return "{" +
                 "\"id\" : " + id +
-                ", \"Name\" : \"" + Name + "\"" +
+                ", \"name\" : \"" + name + "\"" +
                 ", \"phone\" : \"" + phone + "\"" +
                 "}";
     }
+
+    // Example of using the Contact class
 }

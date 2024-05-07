@@ -19,24 +19,19 @@ public class ContactRepository implements AppRepository<Contact> {
             Logger.getLogger(ContactRepository.class.getName());
 
     @Override
-    public void create(Contact contact) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            String hql = "INSERT INTO Contact (setName, setPhone) " +
-                    "VALUES (:setName, :setphone)";
-            MutationQuery query = session.createMutationQuery(hql);
-            query.setParameter("Name", contact.getName());
-            query.setParameter("phone", contact.getPhone());
-            query.executeUpdate();
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            LOGGER.log(Level.WARNING, e.getMessage(), e);
+public void create(Contact contact) {
+    Transaction transaction = null;
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        transaction = session.beginTransaction();
+        session.save(contact);
+        transaction.commit();
+    } catch (Exception e) {
+        if (transaction!= null) {
+            transaction.rollback();
         }
+        LOGGER.log(Level.WARNING, e.getMessage(), e);
     }
+}
 
     @Override
     public Optional<List<Contact>> fetchAll() {
@@ -60,9 +55,9 @@ public class ContactRepository implements AppRepository<Contact> {
             Query<Contact> query = session.createQuery("FROM Contact WHERE id = :id", Contact.class);
             query.setParameter("id", id);
             query.setMaxResults(1);
-            Contact product = query.uniqueResult();
+            Contact contact = query.uniqueResult();
             transaction.commit();
-            return Optional.ofNullable(product);
+            return Optional.ofNullable(contact);
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, e.getMessage(), e);
             return Optional.empty();
@@ -70,16 +65,16 @@ public class ContactRepository implements AppRepository<Contact> {
     }
 
     @Override
-    public void update(Long id, Contact product) {
+    public void update(Long id, Contact contact) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            String hql = "UPDATE Contact SET Name = :sName," +
+            String hql = "UPDATE Contact SET name = :sName," +
                     " phone = :phone"  +
                     " WHERE id = :id";
             MutationQuery query = session.createMutationQuery(hql);
-            query.setParameter("Name", product.getName());
-            query.setParameter("phone", product.getPhone());
+            query.setParameter("Name", contact.getName());
+            query.setParameter("phone", contact.getPhone());
             query.setParameter("id", id);
             query.executeUpdate();
         } catch (Exception e) {
@@ -112,16 +107,16 @@ public class ContactRepository implements AppRepository<Contact> {
 
     public boolean isIdExists(Long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Contact product = new Contact();
-            product.setId(id);
-            product = session.get(Contact.class, product.getId());
+            Contact contact = new Contact();
+            contact.setId(id);
+            contact = session.get(Contact.class, contact.getId());
 
-            if (product != null) {
+            if (contact != null) {
                 Query<Contact> query = session.createQuery("FROM Contact", Contact.class);
                 query.setMaxResults(1);
                 query.getResultList();
             }
-            return product != null;
+            return contact != null;
         }
     }
 
