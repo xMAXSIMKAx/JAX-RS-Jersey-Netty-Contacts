@@ -1,0 +1,14 @@
+{
+    "Name": "Andrey",
+    "Phone": "61261"
+}
+{
+    "name": "John",
+    "phone": "66611"
+}
+{
+    "name": "Mark",
+    "phone": "666111"
+}
+
+http://localhost:8081/api/v1/contacts
